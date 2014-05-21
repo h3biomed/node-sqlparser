@@ -1,13 +1,13 @@
-## ![logo](http://nquery.org/images/robin-small.jpg) nQuery  
+## ![logo](http://nquery.org/images/robin-small.jpg) node-sqlparser  (previously:nQuery)
 
-Generic SQL engine for Web and Big-data.
+node-sqlparser, write in javascript
 
 ## Install
 
 NodeJS Version 0.8.0+
 
 ```
-npm install node-query
+npm install node-sqlparser
 ```
 
 ## Introduction

@@ -1,8 +1,11 @@
 {
-  "author": "windyrobin",
-  "name": "node-query",
-  "description": "general sql query interface for hybrid data sources",
-  "version": "0.3.3",
+  "author": "windyrobin (https://github.com/windyrobin)",
+  "maintainers": [
+    "fish <zhengxinlin@gmail.com> (https://github.com/fishbar)"
+  ],
+  "name": "node-sqlparser",
+  "description": "a sql parser for node.js",
+  "version": "0.0.1",
   "repository": {
     "url": "git://github.com/alibaba/nquery.git"
   },
@@ -25,11 +28,9 @@
     "test": "test"
   },
   "keywords": [
-    "SQL",
-    "Engine",
-    "Hybird",
-    "Data",
-    "Source"
+    "sql parser",
+    "sql ast",
+    "custom sql"
   ],
   "license": "GPLv2"
 }
