@@ -5,7 +5,7 @@
   ],
   "name": "node-sqlparser",
   "description": "a sql parser for node.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "url": "git://github.com/alibaba/nquery.git"
   },
@@ -18,9 +18,9 @@
   "dependencies": {
   },
   "devDependencies": {
-    "pegjs": ">=0.7.0",
+    "pegjs": "=0.8.0",
     "mocha": ">=1.0.0",
-    "should":">=1.2.0" 
+    "should":">=1.2.0"
   },
   "readmeFilename": "README.md",
   "main": "index.js",

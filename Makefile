@@ -1,9 +1,11 @@
 TESTS = test/unit/*.js
 REPORTER = spec
-test: clean
+install:
+	@npm install .
+	@./node_modules/pegjs/bin/pegjs peg/sqlparser.pegjs ./lib/parser.js
+test: clean install
 	@npm install
-	@./node_modules/pegjs/bin/pegjs peg/nquery.pegjs ./base/nquery.js 
-	@./node_modules/mocha/bin/mocha  $(TESTS) --reporter spec
+	@./node_modules/mocha/bin/mocha -r should  $(TESTS) --reporter spec
 
 clean:
 
