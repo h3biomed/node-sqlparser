@@ -10,7 +10,7 @@ describe('SQL select', function () {
 
   describe('check selected fields', function () {
     it('should return ok when simple fields', function () {
-      var sql = 'select abc, def from a.table where id in (1);';
+      var sql = 'select fuck(abc), def from a.table where func(id) in (1,2,2,3)';
       var result = parser.parse(sql);
       console.log(result.ast);
       expect(result.ast)
