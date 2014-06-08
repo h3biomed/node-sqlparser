@@ -11,6 +11,7 @@ function expect(ast) {
     return new expect(ast);
   }
 };
+
 expect.prototype = {
   type: function (type) {
     this._ast.type.should.eql(type);

@@ -10,9 +10,15 @@ describe('SQL select', function () {
 
   describe('check selected fields', function () {
     it('should return ok when simple fields', function () {
-      var sql = 'select fuck(abc), def from a.table where func(id) in (1,2,2,3)';
+      var sql = 'select custom(abc), def from a.tableName where custom(id) in (1,2,2,3)';
       var result = parser.parse(sql);
-      console.log(result.ast);
+      expect(result.ast)
+        .type('select')
+        .columns(['sum(abc,1)', 'def'])
+    });
+    it.only('should return ok when table without db name', function () {
+      var sql = 'select custom(abc), def from tableName where custom(id) in (1,2,2,3)';
+      var result = parser.parse(sql);
       expect(result.ast)
         .type('select')
         .columns(['sum(abc,1)', 'def'])

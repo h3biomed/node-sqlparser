@@ -1,19 +1,26 @@
-// (C) 2011-2012 Alibaba Group Holding Limited.
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 2 as published by the Free Software Foundation.
-
-// Author :windyrobin <windyrobin@Gmail.com>
+/*!
+ *
+ * (C) 2011~ Alibaba Group Holding Limited.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ * Author:
+ *    windyrobin <windyrobin@Gmail.com>
+ *    fishbar <zhengxinlin@gmail.com>
+ *
+ */
 
 {
-  var util = require('util');
-
-  function debug(str){
-    console.log(str);
+  var util;
+  var inspect = function(){};
+  if (module && process && process.env) {
+    util = require('util');
+    inspect = function (obj) {
+      console.log(util.inspect(obj, false, 10));
+    }
   }
-
-  function inspect(obj){
-    console.log(util.inspect(obj, false, 10));
+  function debug(str) {
+    console.log(str);
   }
 
   function createUnaryExpr(op, e) {
@@ -148,7 +155,7 @@
 }
 
 start
-  = &init __ ast:(union_stmt  / update_stmt / replace_insert_stmt) {
+  = __ ast:(union_stmt  / update_stmt / replace_insert_stmt) {
       return {
         ast   : ast,
         param : params
@@ -159,8 +166,6 @@ start
         ast : ast
       }
     }
-
-init  = { params = []; return true; }
 
 union_stmt
   = head:select_stmt tail:(__ KW_UNION __ select_stmt)* {
@@ -278,7 +283,7 @@ table_name
         db : '',
         table : dt
       }
-      if (tail != '') {
+      if (tail) {
         obj.db = dt;
         obj.table = tail[3];
       }
@@ -416,6 +421,7 @@ expr_list
       var el = {
         type : 'expr_list'
       }
+
       var l = createExprList(head, tail, el);
 
       el.value = l;
@@ -465,7 +471,7 @@ not_expr
 
 comparison_expr
   = left:additive_expr __ rh:comparison_op_right? {
-      if (rh == '') {
+      if (!rh) {
         return left;
       } else {
         var res = null;
