@@ -339,7 +339,7 @@ number_or_param
 limit_clause
   = KW_LIMIT __ i1:(number_or_param) __ tail:(COMMA __ number_or_param)? {
       var res = [i1];
-      if (tail == '') {
+      if (!tail) {
         res.unshift({
           type  : 'number',
           value : 0

@@ -16,12 +16,26 @@ describe('SQL select', function () {
         .type('select')
         .columns(['sum(abc,1)', 'def'])
     });
-    it.only('should return ok when table without db name', function () {
+    it('should return ok when table without db name', function () {
       var sql = 'select custom(abc), def from tableName where custom(id) in (1,2,2,3)';
       var result = parser.parse(sql);
       expect(result.ast)
         .type('select')
         .columns(['sum(abc,1)', 'def'])
+    });
+    it('should ok when limit 10', function () {
+      var sql = 'select a from b limit 10';
+      var result = parser.parse(sql);
+      expect(result.ast)
+        .type('select')
+        .limit(0, 10)
+    });
+    it('should ok when limit 10, 20', function () {
+      var sql = 'select a from b limit 10';
+      var result = parser.parse(sql);
+      expect(result.ast)
+        .type('select')
+        .limit(0, 10)
     });
   });
 });

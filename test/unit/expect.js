@@ -23,7 +23,6 @@ expect.prototype = {
       ff[v] = 0;
     });
     this._ast.columns.forEach(function (v) {
-      console.log(JSON.stringify(v));
       var expr = v.expr;
       var key;
       switch (expr.type) {
@@ -38,6 +37,27 @@ expect.prototype = {
     return this;
   },
   from: function () {
+    return this;
+  },
+  limit: function () {
+    var limit = this._ast.limit;
+    var res = [];
+    var args = arguments;
+    var flag = true;
+    limit.forEach(function (v, i) {
+      var value;
+      if (v.type === 'number') {
+        value = parseInt(v.value, 10);
+      } else {
+        value = v;
+      }
+      if (value !== args[i]) {
+        flag = false;
+      }
+    });
+    if (!flag) {
+      throw new Error('limit check failed!');
+    }
     return this;
   }
 }
