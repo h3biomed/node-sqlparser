@@ -23,28 +23,29 @@ make test
 
 ## Usage
 
-please read the demo files `demo/demo.js`
 
-
-for a SQL storage engine, you should realize a function like :
-
+static function
 ```js
-var parser = require('node-sqlparser');
-var sqlast = parser.parse(sql);
+var sql = 'select * from tablea where field1 = 0';
+var parse = require('node-sqlparser').parse;
+var stringify = require('node-sqlparser').stringify;
+var astObj = parse(sql);
+
+var sqlstr = stringify(astObj);
 ```
 
-## nSQL Definition
+using ast
+```
+var AST = require('node-sqlparser');
 
-The 'a little strange' sql as you see above, nSQL realize a subset of SQL92, and it
-also has some procedure features, it supports variables,  it addes types of `var`
-/ `array` / `table`, and also keyword `return`,  for the details,  see the
-specification in `peg/sqlparser.pgejs`.
+var ast = new AST();
+ast.parse(sql);
 
+ast.stringify();
 
-###Just Enjoy It!
+```
 
-
-### Acknowledgements
+## Acknowledgements
 
 * PegJS     : http://pegjs.majda.cz/
 * NodeJS    : http://nodejs.org/

@@ -156,15 +156,11 @@
 
 start
   = __ ast:(union_stmt  / update_stmt / replace_insert_stmt) {
-      return {
-        ast   : ast,
-        param : params
-      }
+      ast.params = params;
+      return ast;
     }
     /ast:proc_stmts {
-      return {
-        ast : ast
-      }
+      return ast;
     }
 
 union_stmt
@@ -204,7 +200,7 @@ select_stmt_nake
       }
   }
 
-column_clause
+column_clause "column_clause"
   = (KW_ALL / (STAR !ident_start)) {
       return '*';
     }
@@ -336,8 +332,11 @@ number_or_param
   = literal_numeric
   / param
 
+int_or_param
+  = literal_int / param
+
 limit_clause
-  = KW_LIMIT __ i1:(number_or_param) __ tail:(COMMA __ number_or_param)? {
+  = KW_LIMIT __ i1:(int_or_param) __ tail:(COMMA __ int_or_param)? {
       var res = [i1];
       if (!tail) {
         res.unshift({
@@ -667,12 +666,12 @@ ident_part  = [A-Za-z0-9_]
 column_part  = [A-Za-z0-9_:]
 
 
-param
-  = l:(':' ident_name) {
+param "PARAM[:param, ?]"
+  = l:(':' ident_name) / l:('?') {
     var p = {
       type : 'param',
-      value: l[1]
-    }
+      value: l.length > 1 ? l[1] : l[0]
+    };
     //var key = 'L' + line + 'C' + column;
     //debug(key);
     //params[key] = p;
@@ -808,6 +807,13 @@ literal_numeric
         value : n
       }
     }
+literal_int "LITERAL INT"
+  = n:int {
+    return {
+      type: 'number',
+      value: n
+    }
+  }
 
 number
   = int_:int frac:frac exp:exp __ { return parseFloat(int_ + frac + exp); }
@@ -830,10 +836,10 @@ exp
 digits
   = digits:digit+ { return digits.join(""); }
 
-digit   = [0-9]
-digit19 = [1-9]
+digit "NUMBER"  = [0-9]
+digit19 "NUMBER" = [1-9]
 
-hexDigit
+hexDigit "HEX"
   = [0-9a-fA-F]
 
 e
@@ -916,10 +922,9 @@ __ =
 
 char = .
 
-whitespace =
-  [ \t\n\r]
+whitespace 'WHITE_SPACE' = [ \t\n\r]
 
-EOL
+EOL "EOF"
   = EOF
   / [\n\r]+
 
