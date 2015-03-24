@@ -32,12 +32,14 @@
   }
 
   function createBinaryExpr(op, left, right) {
-    return {
+    var o = {
       type      : 'binary_expr',
       operator  : op,
       left      : left,
       right     : right
-    }
+    };
+    console.log(o);
+    return o;
   }
 
   function createList(head, tail) {
@@ -561,7 +563,13 @@ like_op_right
     }
 
 in_op_right
-  = op:in_op __ LPAREN  __ l:expr_list __ RPAREN {
+  = op:in_op __ LPAREN __ s:select_stmt __ RPAREN {
+    return {
+      op      : op,
+      right   : s
+    }
+  }
+  / op:in_op __ LPAREN  __ l:expr_list __ RPAREN {
       return {
         op    : op,
         right : l
