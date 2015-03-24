@@ -38,7 +38,7 @@
       left      : left,
       right     : right
     };
-    console.log(o);
+    //console.log(o);
     return o;
   }
 
