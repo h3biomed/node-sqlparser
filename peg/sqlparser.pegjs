@@ -513,7 +513,13 @@ comparison_op_right
     / contains_op_right
 
 arithmetic_op_right
-  = l:(__ arithmetic_comparison_operator __ additive_expr)+ {
+  = __ op:arithmetic_comparison_operator __ LPAREN __ s:select_stmt __ RPAREN {
+      return {
+        op      : op,
+        right   : s
+      }
+    }
+    / l:(__ arithmetic_comparison_operator __ additive_expr)+ {
       return {
         type : 'arithmetic',
         tail : l

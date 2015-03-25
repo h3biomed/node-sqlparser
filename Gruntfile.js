@@ -5,7 +5,7 @@ module.exports = function(grunt) {
       options: {
         node: true
       },
-      files: ['*.js', 'js/**/*.js', 'spec/**/*.js']
+      files: ['*.js', 'lib/**/*.js', 'test/**/*.js']
     },
     execute: {
       build: {
@@ -58,5 +58,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-jasmine-node-coverage');
 
   grunt.registerTask('default', ['npm-install', 'execute:build']);
-  grunt.registerTask('test', ['npm-install', 'jasmine_node']);
+  grunt.registerTask('test', ['npm-install', 'execute:build', 'jasmine_node']);
 };

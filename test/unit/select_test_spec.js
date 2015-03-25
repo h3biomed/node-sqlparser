@@ -11,60 +11,66 @@ var stringify = require('../../lib/stringify');
 
 describe('SQL select', function () {
 
-  describe('check selected fields', function () {
+  beforeEach(function() {
+    this.addMatchers(require('../../lib/jasmine-matcher'));
+  })
 
-    //it('should return ok when simple fields', function () {
-      //var sql = 'select custom(abc), def from a.tablename where custom(id) in (1, 2, 2, 3) and c = ?';
-      //var result = parser.parse(sql);
-      //var resSql = stringify(result);
-      //expect(result)
-        //.type('select')
-        //.columns(['sum(abc,1)', 'def']);
-      //resSql.toLowerCase().should.equal(sql);
-    //});
-//
-    //it('should return ok when table without db name', function () {
-      //var sql = 'select custom(abc), def from tableName where custom(id) in (1,2,2,3)';
-      //var result = parser.parse(sql);
-      //expect(result)
-        //.type('select')
-        //.columns(['sum(abc,1)', 'def']);
-    //});
-//
-    //it('should ok when limit 10', function () {
-      //var sql = 'select a from b limit 10';
-      //var result = parser.parse(sql);
-      //expect(result)
-        //.type('select')
-        //.limit(0, 10);
-    //});
-//
-    //it('should ok when limit 10, 20', function () {
-      //var sql = 'select a from b limit 10, 20';
-      //var result = parser.parse(sql);
-      //expect(result)
-        //.type('select')
-        //.limit(10, 20);
-    //});
-//
-    //it('`AS` is optional', function () {
-      //var sql = 'select a bsd from b c limit 10, 20';
-      //var result = parser.parse(sql);
-      //expect(result)
-        //.type('select')
-        //.limit(10, 20);
-    //});
-//
-    //it('return error message when fields error', function () {
-      //var sql = 'select a from b c limit 10, 20.23';
-      //var result;
-      //try {
-        //result = parser.parse(sql);
-        //console.log(result.limit);
-      //} catch (e) {
-        //console.log(e);
-      //}
-    //});
+  it("should parse basic statement", function() {
+    expect("SELECT * FROM myTable").toBeValid();
+  });
 
+  it("should parse specific columns", function() {
+    expect("SELECT a.col1, a.col2 from a").toBeValid();
+  });
+
+  it("should parse with where clause", function() {
+    expect("SELECT a.col1 from a where a.col2 = 3").toBeValid();
+  });
+
+  it("should parse with table alias", function() {
+    expect("SELECT b.col1 from a b WHERE b.col2 = 3").toBeValid();
+  });
+
+  it("should fail if missing table", function() {
+    expect("SELECT col1 FROM WHERE col1 = 3").not.toBeValid();
+  });
+
+  it("should parse inner select in clause", function() {
+    expect("SELECT col1 FROM a WHERE col2 IN (SELECT col1 FROM b)").toBeValid();
+  });
+
+  it("should parse inner select not in clause", function() {
+    expect("SELECT col1 FROM a WHERE col2 NOT IN (SELECT col1 FROM b)").toBeValid();
+  });
+
+  it("should parse inner select arithmatic clause", function() {    
+    
+    var sql = "SELECT col1 FROM a WHERE col2 = (SELECT col1 FROM b)";
+    expect(sql).toBeValid();
+
+    var ast = parser.parse(sql);
+    expect(ast.where.type).toEqual('binary_expr');
+    expect(ast.where.operator).toEqual('=');
+    expect(ast.where.right.type).toEqual('select');
+  });
+
+  it("should parse compound where clauses", function() {
+    expect("SELECT col1 FROM a WHERE col2 = 3 AND col3 = 5").toBeValid();
+  });
+
+  it("should parse comparison cluases", function() {
+    expect("SELECT col1 FROM a WHERE col2 > 3 AND col3 < 5").toBeValid();
+  });
+
+  it("should parse the count() function", function() {
+    expect("SELECT COUNT(col1) AS count FROM a").toBeValid();
+  });
+
+  it("should parse inner join statements", function() {
+    expect("SELECT a.col1, b.col1 FROM a INNER JOIN b on a.col2 = b.col2").toBeValid();
+  });
+
+  it("should parse != clauses", function() {
+    expect("SELECT a.col1 FROM a WHERE a.col2 != 3").toBeValid();
   });
 });
